@@ -4,12 +4,18 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.13",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "date-fns": "^2.29.3",
     "mobx": "^6.3.8",
     "mobx-react": "^7.2.1",
     "react": "^18.2.0",
+    "react-big-calendar": "^1.5.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"

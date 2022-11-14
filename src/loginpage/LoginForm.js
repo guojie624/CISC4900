@@ -109,7 +109,7 @@ class LoginForm extends React.Component {
             ? "Already have an account?"
             : "Want to register? "}
           <span className="signup" onClick={() => this.changeSignUp()}>
-            {this.state.isSignUp ? "Login in" : "Sign up now"}
+            {this.state.isSignUp ? "Login in" : "Sign up now "}
           </span>
         </p>
       </div>

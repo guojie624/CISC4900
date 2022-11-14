@@ -1,9 +1,13 @@
-import './App.css';
-import Login from './loginpage/login';
+import "./App.css";
+import Login from "./loginpage/login";
+import CalendarPage from "./Calendarpage/CalendarPage";
 
 function App() {
   return (
-    <Login></Login>
+    <div>
+      {/* <Login></Login> */}
+      <CalendarPage />
+    </div>
   );
 }
 
