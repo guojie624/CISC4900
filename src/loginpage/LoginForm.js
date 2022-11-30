@@ -2,6 +2,7 @@ import InputField from "./InputField";
 import SubmitButton from "./SubmitButton.js";
 import React from "react";
 import UserStore from "../store/UserStore";
+import { Link } from "react-router-dom";
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -98,11 +99,13 @@ class LoginForm extends React.Component {
           value={this.state.password ? this.state.password : ""}
           onChange={(val) => this.setInputValue("password", val)}
         />
-        <SubmitButton
-          text={this.state.isSignUp ? "Sign Up" : "Log In"}
-          disabled={this.state.buttonDisabled}
-          onClick={() => this.submitForm()}
-        />
+        <Link to="calendarpage">
+          <SubmitButton
+            text={this.state.isSignUp ? "Sign Up" : "Log In"}
+            disabled={this.state.buttonDisabled}
+            onClick={() => this.submitForm()}
+          />
+        </Link>
 
         <p>
           {this.state.isSignUp
