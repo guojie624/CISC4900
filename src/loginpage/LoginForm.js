@@ -30,9 +30,6 @@ const LoginForm = () => {
 
   const submitForm = async () => {
     console.log(`sign up ${isSignUp} 11111`);
-    if (!username || !password) {
-      SetButtonDisabled(true);
-    }
 
     console.log(`sign up ${isSignUp}`);
 
@@ -94,7 +91,7 @@ const LoginForm = () => {
 
       <SubmitButton
         text={isSignUp ? "Sign Up" : "Log In"}
-        disabled={buttonDisabled}
+        disabled={!username && !password}
         handleClick={submitForm}
       />
 
