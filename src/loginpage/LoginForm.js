@@ -1,108 +1,125 @@
-import InputField from "./InputField";
-import SubmitButton from "./SubmitButton.js";
-import React, { useState } from "react";
-import UserStore from "../store/UserStore";
-import { useNavigate, useParams } from "react-router-dom";
+import InputField from './InputField';
+import SubmitButton from './SubmitButton.js';
+import React, { useState } from 'react';
+import UserStore from '../store/UserStore';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+	getAuth,
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+} from 'firebase/auth';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import { database } from '../firebaseConfig';
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [buttonDisabled, SetButtonDisabled] = useState(false);
-  const [isSignUp, SetIsSignUp] = useState(false);
-  const navigate = useNavigate();
-  const setInputValue = (property, val) => {
-    val = val.trim();
-    if (property === "username") {
-      setUsername(val);
-    }
-    if (property === "password") {
-      setPassword(val);
-    }
-    if (val.length > 12) {
-      return;
-    }
-  };
-  const resetForm = () => {
-    setUsername("");
-    setPassword("");
-    SetButtonDisabled(false);
-  };
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const [buttonDisabled, SetButtonDisabled] = useState(false);
+	const [isSignUp, SetIsSignUp] = useState(false);
+	const navigate = useNavigate();
+	const usersCollectionRef = collection(database, 'users');
+	const setInputValue = (property, val) => {
+		val = val.trim();
+		if (property === 'username') {
+			setUsername(val);
+		}
+		if (property === 'password') {
+			setPassword(val);
+		}
+		if (val.length > 12) {
+			return;
+		}
+	};
+	const resetForm = () => {
+		setUsername('');
+		setPassword('');
+		SetButtonDisabled(false);
+	};
 
-  const submitForm = async () => {
-    console.log(`sign up ${isSignUp} 11111`);
+	const submitForm = async () => {
+		const auth = getAuth();
+		// console.log(auth);
+		// const currentUser = auth.currentUser;
+		// const currentUserUid = currentUser.uid;
+		if (isSignUp) {
+			try {
+				const responseUser = await createUserWithEmailAndPassword(
+					auth,
+					username,
+					password
+				);
+				console.log('this is responseUser - ', responseUser);
 
-    console.log(`sign up ${isSignUp}`);
+				const newtUserUid = responseUser.user.uid;
 
-    if (isSignUp) {
-      SetIsSignUp(false);
-      resetForm();
-    } else {
-      navigate("/calendarpage");
-    }
+				await setDoc(doc(database, 'users', newtUserUid), {
+					email: username,
+				});
 
-    // try {
-    //   let res = await fetch('/login', {
-    //     method: 'post',
-    //     header: {
-    //       'Accept': 'application/jason',
-    //       'Content-Type': 'application/jason'
-    //     },
-    //     body: JSON.stringify({
-    //       username: this.state.username,
-    //       password: this.state.password
-    //     })
-    //   });
-    //   let result = await res.jason();
-    //   if (result && result.success) {
-    //     UserStore.isLoggedIn = true;
-    //     UserStore.username = result.username;
-    //   }
-    //   else if (result && result.success === false) {
-    //     this.resetForm();
-    //     alert(result.msg);
+				// console.log(
+				// 	'this is the newly created user: ',
+				// 	// newUserRef.id,
+				// 	' and this userRef: ',
+				// 	newUserRef
+				// );
 
-    //   }
-    // }
-    // catch (e) {
-    //   console.log(e)
-    //   this.resetForm();
+				// const newUserCollectionRef = doc(database, 'users', newtUserUid);
 
-    // }
-  };
-  const changeSignUp = () => {
-    SetIsSignUp(!isSignUp);
-    resetForm();
-  };
-  return (
-    <div className="loginForm">
-      {isSignUp ? "Sign Up" : "Log In"}
-      <InputField
-        type="text"
-        placeholder="Username"
-        value={username ? username : ""}
-        onChange={(val) => setInputValue("username", val)}
-      />
-      <InputField
-        type="password"
-        placeholder="Password"
-        value={password ? password : ""}
-        onChange={(val) => setInputValue("password", val)}
-      />
+				// const todoListCollectionRef = collection(newUserCollectionRef, 'todos');
+				// await addDoc(todoListCollectionRef, {
+				// 	todoTitle: 'hello',
+				// });
+			} catch (err) {
+				alert(err.message);
+			}
+			SetIsSignUp(false);
+			resetForm();
+		} else {
+			signInWithEmailAndPassword(auth, username, password)
+				.then((response) => {
+					console.log(response.user);
+					// navigate('/calendar-page');
+					navigate('/todo-list');
+				})
+				.catch((err) => {
+					alert(err.message);
+				});
+		}
+	};
+	const changeSignUp = () => {
+		SetIsSignUp(!isSignUp);
+		resetForm();
+	};
+	return (
+		<div className='loginForm'>
+			{isSignUp ? 'Sign Up' : 'Log In'}
+			<InputField
+				type='text'
+				placeholder='Username'
+				value={username ? username : ''}
+				onChange={(val) => setInputValue('username', val)}
+			/>
+			<InputField
+				type='password'
+				placeholder='Password'
+				value={password ? password : ''}
+				onChange={(val) => setInputValue('password', val)}
+			/>
 
-      <SubmitButton
-        text={isSignUp ? "Sign Up" : "Log In"}
-        disabled={!username && !password}
-        handleClick={submitForm}
-      />
+			<SubmitButton
+				text={isSignUp ? 'Sign Up' : 'Log In'}
+				disabled={!username && !password}
+				handleClick={submitForm}
+			/>
 
-      <p className="bottomText">
-        {isSignUp ? "Already have an account?" : "Want to register? "}
-        <span className="signup" onClick={() => changeSignUp()}>
-          {isSignUp ? "Login in" : "Sign up now "}
-        </span>
-      </p>
-    </div>
-  );
+			<p className='bottomText'>
+				{isSignUp ? 'Already have an account?' : 'Want to register? '}
+				<span className='signup' onClick={() => changeSignUp()}>
+					{isSignUp ? 'Login in' : 'Sign up now '}
+				</span>
+			</p>
+		</div>
+	);
 };
 
 export default LoginForm;
