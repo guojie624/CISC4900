@@ -1,92 +1,236 @@
 import React, { useState } from 'react';
+import { Grid } from '@mui/material';
+
 import TodoForm from './TodoForm';
-import Todo from './todo';
+// import Todo from './todo';
 import { useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
 import {
 	collection,
 	addDoc,
 	getDocs,
-	query,
-	where,
+	updateDoc,
 	getDoc,
 	doc,
+	deleteDoc,
 } from 'firebase/firestore';
-import axios from 'axios';
 import { database } from '../firebaseConfig';
+import { UserAuth } from '../context/AuthContext';
+import TodoItem from './todoItem';
+
 function TodoList() {
 	const [todos, setTodos] = useState([]);
+	const { user } = UserAuth();
 
-	const getToDos = async () => {
-		const auth = getAuth();
-		const currentUser = auth.currentUser;
-		console.log('this is current user: ', auth);
+	const getTodos = async () => {
+		console.log('this is user from getTodos - ', user);
+		if (!user.hasOwnProperty('uid')) {
+			return;
+		}
 
-		const currentUserRef = doc(database, 'users', currentUser.uid);
-		const currentUserSnap = await getDoc(currentUserRef);
-		console.log('currentUserSnap: ', currentUserSnap.data());
+		console.log('this is user from getTodos - ', user);
+		const currentUseruId = user.uid;
+		console.log('this is current user: ', currentUseruId);
+		const currentUserRef = doc(database, 'users', currentUseruId);
 
-		const currentUserTodoRef = await getDocs(
-			collection(database, `users/${currentUser.uid}/todos`)
-		);
+		try {
+			const currentUserSnap = await getDoc(currentUserRef);
+			console.log('currentUserSnap: ', currentUserSnap.data());
+			const currentUserTodoListRef = await getDocs(
+				collection(database, `users/${currentUseruId}/todos`)
+			);
+			console.log('currentUserTodoListRef - ', currentUserTodoListRef);
 
-		// console.log('currentUserTodoRef - ', currentUserTodoRef);
-		currentUserTodoRef.forEach((todoItem) => {
-			console.log(todoItem.data());
-		});
+			const todoList = [];
+
+			currentUserTodoListRef.forEach((todoItem) => {
+				console.log('this is todoItem: ', todoItem.data());
+				console.log('this is todoItem id: ', todoItem.id);
+				todoList.push({
+					...todoItem.data(),
+					id: todoItem.id,
+				});
+			});
+
+			setTodos(todoList);
+		} catch (err) {
+			console.log('there is an err in todoList page: ', err.message);
+		}
 	};
 
 	useEffect(() => {
-		getToDos();
-	}, []);
+		getTodos();
+	}, [user]);
 
-	const addTodo = (todo) => {
-		if (!todo.text || /^\s*$/.test(todo.text)) {
+	const addTodo = async (todo) => {
+		// if (!todo.text || /^\s*$/.test(todo.text)) {
+		// 	return;
+		// }
+
+		if (!todo || /^\s*$/.test(todo)) {
 			return;
 		}
+		try {
+			const currentUserRef = doc(database, 'users', user.uid);
+			const todoListCollectionRef = collection(currentUserRef, 'todos');
+			const newTodo = {
+				todoItem: todo,
+				completed: false,
+			};
+			const newTodoRef = await addDoc(todoListCollectionRef, newTodo);
 
-		const newTodos = [todo, ...todos];
+			console.log('this is newTodoRef - ', newTodoRef.id);
 
-		setTodos(newTodos);
-		console.log(...todos);
-	};
+			newTodo['id'] = newTodoRef.id;
 
-	const updateTodo = (todoId, newValue) => {
-		if (!newValue.text || /^\s*$/.test(newValue.text)) {
-			return;
+			// getTodos();
+			setTodos((prevState) => [...prevState, newTodo]);
+		} catch (err) {
+			console.log(
+				'there is something wrong when tried to add a new todo: ',
+				err.message
+			);
 		}
-
-		setTodos((prev) =>
-			prev.map((item) => (item.id === todoId ? newValue : item))
-		);
 	};
 
-	const removeTodo = (id) => {
-		const removedArr = [...todos].filter((todo) => todo.id !== id);
+	const handleUpdateTodo = async (todoId, newValue) => {
+		try {
+			const currentTodoRef = doc(database, `users/${user.uid}/todos`, todoId);
+			await updateDoc(currentTodoRef, {
+				todoItem: newValue,
+			});
 
-		setTodos(removedArr);
+			const currentTodoSnap = await getDoc(currentTodoRef);
+			console.info(
+				'this is currentTodoSnap after update: ',
+				currentTodoSnap.data()
+			);
+
+			setTodos((prevTodoListState) =>
+				prevTodoListState.map((todo) =>
+					todo.id === todoId ? { ...todoId, todoItem: newValue } : todo
+				)
+			);
+		} catch (err) {
+			console.log('there is an err in handleUpdateTodo: ', err.message);
+		}
 	};
 
-	const completeTodo = (id) => {
-		let updatedTodos = todos.map((todo) => {
-			if (todo.id === id) {
-				todo.isComplete = !todo.isComplete;
-			}
-			return todo;
-		});
-		setTodos(updatedTodos);
+	const handleCompleteTodo = async (todoId, currentCompletedState) => {
+		try {
+			const currentTodoRef = doc(database, `users/${user.uid}/todos`, todoId);
+			// const currentTodoSnap = await getDoc(currentTodoRef);
+			await updateDoc(currentTodoRef, {
+				completed: currentCompletedState,
+			});
+
+			const currentTodoSnap = await getDoc(currentTodoRef);
+			console.info(
+				'this is currentTodoSnap after update: ',
+				currentTodoSnap.data()
+			);
+
+			setTodos((prevTodoListState) =>
+				prevTodoListState.map((todo) =>
+					todo.id === todoId
+						? { ...todo, completed: currentCompletedState }
+						: todo
+				)
+			);
+		} catch (err) {
+			console.log('there is an err in handleCompleteTodo: ', err.message);
+		}
 	};
+
+	const handleDeleteTodo = async (todoId) => {
+		try {
+			const currentTodoRef = doc(database, `users/${user.uid}/todos`, todoId);
+			// const currentTodoSnap = await getDoc(currentTodoRef);
+			await deleteDoc(currentTodoRef);
+
+			setTodos((prevTodoListState) =>
+				prevTodoListState.filter((todo) => todo.id !== todoId)
+			);
+		} catch (err) {
+			console.log('there is an err in handleDeleteTodo: ', err.message);
+		}
+	};
+
+	// const updateTodo = (todoId, newValue) => {
+	// 	if (!newValue.text || /^\s*$/.test(newValue.text)) {
+	// 		return;
+	// 	}
+
+	// 	setTodos((prev) =>
+	// 		prev.map((item) => (item.id === todoId ? newValue : item))
+	// 	);
+	// };
+
+	// const removeTodo = (id) => {
+	// 	const removedArr = [...todos].filter((todo) => todo.id !== id);
+
+	// 	setTodos(removedArr);
+	// };
+
+	// const completeTodo = (id) => {
+	// 	let updatedTodos = todos.map((todo) => {
+	// 		if (todo.id === id) {
+	// 			todo.isComplete = !todo.isComplete;
+	// 		}
+	// 		return todo;
+	// 	});
+	// 	setTodos(updatedTodos);
+	// };
 
 	return (
 		<>
 			<h1>What's the Plan for Today?</h1>
 			<TodoForm onSubmit={addTodo} />
-			<Todo
+			<Grid style={{ marginTop: '20px' }} container spacing={1}>
+				{/* move the completed items to the front */}
+				{todos
+					.sort((todo1, todo2) => todo1.completed - todo2.completed)
+					.map((notCompletedTodo) => (
+						<Grid item maxs={6} sm={6} md={4} key={notCompletedTodo.id}>
+							<TodoItem
+								todoItemInfo={notCompletedTodo}
+								handleUpdateTodo={handleUpdateTodo}
+								handleChangeCompletState={handleCompleteTodo}
+								handleDeleteTodo={handleDeleteTodo}
+							/>
+						</Grid>
+					))}
+
+				{/* {todos
+					.filter((item) => !item.completed)
+					.map((notCompletedTodo) => (
+						<Grid item maxs={6} sm={6} md={4} key={notCompletedTodo.id}>
+							<TodoItem
+								todoItemInfo={notCompletedTodo}
+								handleUpdateTodo={handleUpdateTodo}
+								handleChangeCompletState={handleCompleteTodo}
+							/>
+						</Grid>
+					))} */}
+				{/* move the completed items to  the back */}
+				{/* {todos
+					.filter((item) => item.completed)
+					.map((notCompletedTodo) => (
+						<Grid item maxs={6} sm={6} md={4} key={notCompletedTodo.id}>
+							<TodoItem
+								todoItemInfo={notCompletedTodo}
+								handleUpdateTodo={handleUpdateTodo}
+								handleChangeCompletState={handleCompleteTodo}
+							/>
+						</Grid>
+					))} */}
+			</Grid>
+
+			{/* <Todo
 				todos={todos}
 				completeTodo={completeTodo}
 				removeTodo={removeTodo}
 				updateTodo={updateTodo}
-			/>
+			/> */}
 		</>
 	);
 }
