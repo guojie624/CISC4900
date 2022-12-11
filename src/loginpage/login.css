@@ -1,64 +1,72 @@
-body, html, #root, .app, .container {
-    width: 100%;
-    height: 100%;
-  }
-  
-  
+body,
+html,
+#root,
+.app,
 .container {
-font-size: 28px;
-color: #fff;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-background-color: #282c34;
+	background: url('./Lbimg.jpg') no-repeat center center fixed;
+	background-size: cover;
+}
+
+.container {
+	font-size: 28px;
+	color: rgb(15, 14, 14);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .loginForm {
-box-sizing: border-box;
-width: 100%;
-max-width: 400px;
-padding-left: 20px;
-padding-right: 20px;
+	box-sizing: border-box;
+	width: 20%;
+	height: 400px;
+	border: solid rgb(51, 51, 85) 3px;
+	padding-left: 20px;
+	padding-right: 20px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
-
+.bottomText {
+	font-size: 15px;
+}
 .inputField {
-padding-top: 16px;
+	padding-top: 16px;
 }
 
 .input {
-box-sizing: border-box;
-outline: none;
-border: solid 2px #1189de;
-border-radius: 4px;
-color: #292929;
-width: 100%;
-padding: 12px;
-font-size: 14px;
-background: rgba(255, 255, 255, 1);
+	box-sizing: border-box;
+	outline: none;
+	border: solid rgb(51, 51, 85) 2px;
+	border-radius: 4px;
+	color: #292929;
+	width: 100%;
+	padding: 12px;
+	font-size: 14px;
+	background: rgba(255, 255, 255, 1);
 }
 
 .submitButton {
-padding-top: 16px;
+	padding-top: 16px;
 }
-
 
 .btn {
-width: 100%;
-min-width: 280px;
-color: #565656;
-padding: 12px;
-font-size: 14px;
-font-weight: bold;
-border: solid 2px #1189de;
-border-radius: 4px;
-background: #fff;
-cursor: pointer;
+	width: 100%;
+	min-width: 280px;
+	color: #565656;
+	padding: 12px;
+	font-size: 14px;
+	font-weight: bold;
+	border: solid 2px rgb(51, 51, 85);
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
 }
-.signup{
-    cursor: pointer;
+.signup {
+	cursor: pointer;
 }
 
 .signup:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
