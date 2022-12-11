@@ -1,9 +1,16 @@
 import { Outlet, Navigate } from 'react-router-dom';
-import { UserAuth } from '../context/AuthContext';
+import { AuthContextProvider, UserAuth } from '../context/AuthContext';
 
 const PrivateRoutes = () => {
 	// let auth = { token: true };
 	const { user } = UserAuth();
-	return user ? <Outlet /> : <Navigate to='/' />;
+	console.log('this is user in the PrivateRoutes ----------- ', user);
+	return user ? (
+		<AuthContextProvider>
+			<Outlet />
+		</AuthContextProvider>
+	) : (
+		<Navigate to='/' />
+	);
 };
 export default PrivateRoutes;
