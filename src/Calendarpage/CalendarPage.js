@@ -20,34 +20,59 @@ import {
 	doc,
 } from 'firebase/firestore';
 import { database } from '../firebaseConfig';
-const locales = {
-	'en-US': require('date-fns/locale/en-US'),
-};
-const localizer = dateFnsLocalizer({
-	format,
-	parse,
-	startOfWeek,
-	getDay,
-	locales,
-});
+import { UserAuth } from '../context/AuthContext';
 
-const events = [
-	{
-		title: 'Big Meeting',
-		allDay: false,
-		start: new Date(2022, 10, 13, 8),
-		end: new Date(2022, 10, 13, 9),
-	},
-	{
-		title: 'fsaf',
-		allDay: false,
-		start: new Date(2022, 10, 13, 10),
-		end: new Date(2022, 10, 13, 11),
-	},
-];
+// const events = [
+// 	{
+// 		title: 'Big Meeting',
+// 		allDay: false,
+// 		start: new Date(2022, 10, 13, 8),
+// 		end: new Date(2022, 10, 13, 9),
+// 	},
+// 	{
+// 		title: 'fsaf',
+// 		allDay: false,
+// 		start: new Date(2022, 10, 13, 10),
+// 		end: new Date(2022, 10, 13, 11),
+// 	},
+// ];
 
 function CalendarPage() {
+	const localizer = dateFnsLocalizer({
+		format,
+		parse,
+		startOfWeek,
+		getDay,
+		locales,
+	});
+	const locales = {
+		'en-US': require('date-fns/locale/en-US'),
+	};
+	const { user } = UserAuth();
 	const [newEvent, setNewEvent] = useState({ title: '', start: '', end: '' });
+
+	const getCalendars = async () => {
+		if (!user.hasOwnProperty('uid')) {
+			return;
+		}
+		const currentUseruId = user.uid;
+		const currentUserRef = doc(database, 'users', currentUseruId);
+		try {
+			const currentUserSnap = await getDoc(currentUserRef);
+			console.log('currentUserSnap: ', currentUserSnap.data());
+			const currentUserTodoListRef = await getDocs(
+				collection(database, `users/${currentUseruId}/newevent`)
+			const enents = [];
+			
+			);
+		} catch (err) {
+			console.log('there is an err in todoList page: ', err.message);
+		}
+	};
+	useEffect(() => {
+		getCalendars();
+	}, [user]);
+
 	const [allEvents, setAllEvents] = useState(events);
 	const collectionRef = collection(database, 'users');
 	useEffect(() => {

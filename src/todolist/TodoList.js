@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Grid } from '@mui/material';
 
 import TodoForm from './TodoForm';
-// import Todo from './todo';
 import { useEffect } from 'react';
 import {
 	collection,
@@ -62,10 +61,6 @@ function TodoList() {
 	}, [user]);
 
 	const addTodo = async (todo) => {
-		// if (!todo.text || /^\s*$/.test(todo.text)) {
-		// 	return;
-		// }
-
 		if (!todo || /^\s*$/.test(todo)) {
 			return;
 		}
@@ -118,7 +113,7 @@ function TodoList() {
 	const handleCompleteTodo = async (todoId, currentCompletedState) => {
 		try {
 			const currentTodoRef = doc(database, `users/${user.uid}/todos`, todoId);
-			// const currentTodoSnap = await getDoc(currentTodoRef);
+
 			await updateDoc(currentTodoRef, {
 				completed: currentCompletedState,
 			});
@@ -144,7 +139,7 @@ function TodoList() {
 	const handleDeleteTodo = async (todoId) => {
 		try {
 			const currentTodoRef = doc(database, `users/${user.uid}/todos`, todoId);
-			// const currentTodoSnap = await getDoc(currentTodoRef);
+
 			await deleteDoc(currentTodoRef);
 
 			setTodos((prevTodoListState) =>
@@ -154,32 +149,6 @@ function TodoList() {
 			console.log('there is an err in handleDeleteTodo: ', err.message);
 		}
 	};
-
-	// const updateTodo = (todoId, newValue) => {
-	// 	if (!newValue.text || /^\s*$/.test(newValue.text)) {
-	// 		return;
-	// 	}
-
-	// 	setTodos((prev) =>
-	// 		prev.map((item) => (item.id === todoId ? newValue : item))
-	// 	);
-	// };
-
-	// const removeTodo = (id) => {
-	// 	const removedArr = [...todos].filter((todo) => todo.id !== id);
-
-	// 	setTodos(removedArr);
-	// };
-
-	// const completeTodo = (id) => {
-	// 	let updatedTodos = todos.map((todo) => {
-	// 		if (todo.id === id) {
-	// 			todo.isComplete = !todo.isComplete;
-	// 		}
-	// 		return todo;
-	// 	});
-	// 	setTodos(updatedTodos);
-	// };
 
 	return (
 		<>
@@ -199,38 +168,7 @@ function TodoList() {
 							/>
 						</Grid>
 					))}
-
-				{/* {todos
-					.filter((item) => !item.completed)
-					.map((notCompletedTodo) => (
-						<Grid item maxs={6} sm={6} md={4} key={notCompletedTodo.id}>
-							<TodoItem
-								todoItemInfo={notCompletedTodo}
-								handleUpdateTodo={handleUpdateTodo}
-								handleChangeCompletState={handleCompleteTodo}
-							/>
-						</Grid>
-					))} */}
-				{/* move the completed items to  the back */}
-				{/* {todos
-					.filter((item) => item.completed)
-					.map((notCompletedTodo) => (
-						<Grid item maxs={6} sm={6} md={4} key={notCompletedTodo.id}>
-							<TodoItem
-								todoItemInfo={notCompletedTodo}
-								handleUpdateTodo={handleUpdateTodo}
-								handleChangeCompletState={handleCompleteTodo}
-							/>
-						</Grid>
-					))} */}
 			</Grid>
-
-			{/* <Todo
-				todos={todos}
-				completeTodo={completeTodo}
-				removeTodo={removeTodo}
-				updateTodo={updateTodo}
-			/> */}
 		</>
 	);
 }

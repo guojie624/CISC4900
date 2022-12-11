@@ -1,7 +1,7 @@
 import InputField from './InputField';
 import SubmitButton from './SubmitButton.js';
 import React, { useState } from 'react';
-import UserStore from '../store/UserStore';
+
 import { useNavigate, useParams } from 'react-router-dom';
 import {
 	getAuth,
@@ -38,10 +38,6 @@ const LoginForm = () => {
 	};
 
 	const submitForm = async () => {
-		// const auth = getAuth();
-		// console.log(auth);
-		// const currentUser = auth.currentUser;
-		// const currentUserUid = currentUser.uid;
 		if (isSignUp) {
 			try {
 				const responseUser = await createUser(email, password);
@@ -52,20 +48,6 @@ const LoginForm = () => {
 				await setDoc(doc(database, 'users', newtUserUid), {
 					email: email,
 				});
-
-				// console.log(
-				// 	'this is the newly created user: ',
-				// 	// newUserRef.id,
-				// 	' and this userRef: ',
-				// 	newUserRef
-				// );
-
-				// const newUserCollectionRef = doc(database, 'users', newtUserUid);
-
-				// const todoListCollectionRef = collection(newUserCollectionRef, 'todos');
-				// await addDoc(todoListCollectionRef, {
-				// 	todoTitle: 'hello',
-				// });
 			} catch (err) {
 				alert(err.message);
 			}
@@ -75,7 +57,7 @@ const LoginForm = () => {
 			login(email, password)
 				.then((response) => {
 					console.log(response.user);
-					// navigate('/calendar-page');
+
 					navigate('/todo-list');
 				})
 				.catch((err) => {
