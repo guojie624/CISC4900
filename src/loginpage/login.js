@@ -7,7 +7,9 @@ import { observer } from 'mobx-react';
 import { AuthContextProvider } from '../context/AuthContext';
 
 const Login = () => {
+	console.log("111111");
 	return (
+
 		<AuthContextProvider>
 			<div className='container'>
 				<LoginForm />
