@@ -77,7 +77,6 @@ function TodoList() {
 
 			newTodo['id'] = newTodoRef.id;
 
-			// getTodos();
 			setTodos((prevState) => [...prevState, newTodo]);
 		} catch (err) {
 			console.log(
