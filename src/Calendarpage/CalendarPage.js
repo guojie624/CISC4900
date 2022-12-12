@@ -9,6 +9,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Button from '@mui/material/Button';
 import { getAuth } from 'firebase/auth';
+import { Link } from 'react-router-dom';
 
 import {
 	collection,
@@ -124,7 +125,6 @@ function CalendarPage() {
 		}
 	};
 	const onDoubleClickEvent = useCallback((calEvent) => {
-		window.clearTimeout(clickRef?.current);
 		clickRef.current = window.setTimeout(() => {
 			window.alert(calEvent, 'onDoubleClickEvent');
 		}, 250);
@@ -132,7 +132,13 @@ function CalendarPage() {
 
 	return (
 		<div className='App'>
-			<h1>Calendar</h1>
+			<h1>
+				Calendar
+				<nav style={{ textAlign: 'left' }}>
+					<Link to='/todo-list'>My TodoList</Link>
+					<></>
+				</nav>
+			</h1>
 			<h2>Add New Event</h2>
 			<div>
 				<input

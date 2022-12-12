@@ -15,6 +15,8 @@ import {
 import { database } from '../firebaseConfig';
 import { UserAuth } from '../context/AuthContext';
 import TodoItem from './todoItem';
+import { Link } from 'react-router-dom';
+import './TodoList.css';
 
 function TodoList() {
 	const [todos, setTodos] = useState([]);
@@ -151,7 +153,13 @@ function TodoList() {
 
 	return (
 		<>
-			<h1>What's the Plan for Today?</h1>
+			<h1>
+				What's the Plan for Today?
+				<nav style={{ textAlign: 'left' }}>
+					<Link to='/calendar-page'>My calendar</Link>
+				</nav>
+			</h1>
+
 			<TodoForm onSubmit={addTodo} />
 			<Grid style={{ marginTop: '20px' }} container spacing={1}>
 				{/* move the completed items to the front */}
