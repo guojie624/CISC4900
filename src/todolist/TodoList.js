@@ -15,6 +15,8 @@ import {
 import { database } from '../firebaseConfig';
 import { UserAuth } from '../context/AuthContext';
 import TodoItem from './todoItem';
+import CurrentDate from './CurrentDate';
+import './TodoList.css'
 
 function TodoList() {
 	const [todos, setTodos] = useState([]);
@@ -149,9 +151,13 @@ function TodoList() {
 		}
 	};
 
+
 	return (
-		<>
-			<h1>What's the Plan for Today?</h1>
+		<div className="bodyStyle">
+			<h1>Today's To do List</h1>
+			<CurrentDate className="CurrentDate" />
+			<div> </div>
+
 			<TodoForm onSubmit={addTodo} />
 			<Grid style={{ marginTop: '20px' }} container spacing={1}>
 				{/* move the completed items to the front */}
@@ -168,7 +174,8 @@ function TodoList() {
 						</Grid>
 					))}
 			</Grid>
-		</>
+
+		</div>
 	);
 }
 

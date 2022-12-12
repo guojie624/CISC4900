@@ -79,7 +79,7 @@ const LoginForm = () => {
 				onChange={(val) => setInputValue('email', val)}
 			/>
 			<InputField
-				type='password'
+				type='text'
 				placeholder='Password'
 				value={password ? password : ''}
 				onChange={(val) => setInputValue('password', val)}
