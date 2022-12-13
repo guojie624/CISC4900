@@ -11,9 +11,7 @@ const Login = () => {
   console.log("111111");
   return (
     <div>
-      
-        <h1 className="Title">Wellcome to Calender Tracker</h1>
-      
+      <h1 className="Title">Wellcome to Calendar Tracker</h1>
 
       <AuthContextProvider>
         <div className="container">
