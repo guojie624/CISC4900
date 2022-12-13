@@ -37,7 +37,7 @@ html,
 	padding-top: 15px;
 }
 
-.input[type = "text"] {
+.input {
 	box-sizing: border-box;
 	outline: none;
 	border: solid rgb(51, 51, 85) 2px;
@@ -83,7 +83,7 @@ html,
 
 .Title{
 	font-size:60px;
-	padding: 20px;
+	padding:30px;
 	margin:auto;
 	color:darkblue;
 

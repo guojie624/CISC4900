@@ -1,0 +1,30 @@
+.App{
+margin:auto;
+padding:20px;
+}
+.container{
+
+    width:500px;
+    max-width: 100%;
+    padding:0 20px;
+    margin: 0 auto;
+    border: 1px solid;
+    border-radius: 15px;
+    background:rgb(109, 197, 241);
+    font-size: 20px;
+    
+}
+
+.headerStyle{
+    width:2000px;
+    max-width: 100%;
+    text-align: center;
+    padding:0 20px;
+    margin: 0 auto;
+    background:rgb(133, 214, 71);
+    font-size: 20px;
+}
+
+.calendarStyle{
+    background-image: url("./bgcalendar.jpg" )  ;
+}
