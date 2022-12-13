@@ -9,6 +9,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Button from '@mui/material/Button';
 import { getAuth } from 'firebase/auth';
+import { Popover, Typography } from '@mui/material';
 
 import {
 	collection,
@@ -22,11 +23,17 @@ import {
 } from 'firebase/firestore';
 import { database } from '../firebaseConfig';
 import { UserAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function CalendarPage() {
+	const navigate = useNavigate();
 	const [allEvents, setAllEvents] = useState([]);
 	const [newEvent, setNewEvent] = useState({ title: '', start: '', end: '' });
-	const { user } = UserAuth();
+	const [selected, setSelected] = useState(null);
+	const [eventStart, setEventStart] = useState(null);
+
+	const { user, logout } = UserAuth();
+
 	const locales = {
 		'en-US': require('date-fns/locale/en-US'),
 	};
@@ -37,6 +44,15 @@ function CalendarPage() {
 		getDay,
 		locales,
 	});
+	const logoutForm = async () => {
+		logout()
+			.then((response) => {
+				navigate('/');
+			})
+			.catch((err) => {
+				alert(err.message);
+			});
+	};
 
 	const clickRef = useRef(null);
 
@@ -123,16 +139,21 @@ function CalendarPage() {
 			);
 		}
 	};
-	const onDoubleClickEvent = useCallback((calEvent) => {
-		window.clearTimeout(clickRef?.current);
-		clickRef.current = window.setTimeout(() => {
-			window.alert(calEvent, 'onDoubleClickEvent');
-		}, 250);
-	}, []);
+	const handleSelected = (event) => {
+		console.log('event in handleSelected - ', event);
+		console.log('event in handleSelected - ', event.start);
+
+		console.log('event in handleSelected - ', typeof event.start);
+		console.log('event in handleSelected - ', Date(event.start));
+
+		setSelected(event);
+		setEventStart(event.start);
+	};
 
 	return (
 		<div className='App'>
 			<h1>Calendar</h1>
+			<button onClick={logoutForm}>logout</button>
 			<h2>Add New Event</h2>
 			<div>
 				<input
@@ -164,9 +185,19 @@ function CalendarPage() {
 				events={allEvents}
 				startAccessor='start'
 				endAccessor='end'
-				onDoubleClickEvent={onDoubleClickEvent}
+				selected={selected}
+				onSelectEvent={handleSelected}
 				style={{ height: 500, margin: '50px' }}
 			/>
+			<Popover open={Boolean(selected)} anchorEl={eventStart}>
+				<Typography>
+					{`${selected?.start.toString()},
+						${selected?.end.toString()},
+						${selected?.title.toString()}`}
+					<Button>Update</Button>
+					<Button>Delete</Button>
+				</Typography>
+			</Popover>
 		</div>
 	);
 }

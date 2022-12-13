@@ -16,11 +16,12 @@ import { database } from '../firebaseConfig';
 import { UserAuth } from '../context/AuthContext';
 import TodoItem from './todoItem';
 import CurrentDate from './CurrentDate';
-import './TodoList.css'
-
+import './TodoList.css';
+import { useNavigate } from 'react-router-dom';
 function TodoList() {
+	const navigate = useNavigate();
 	const [todos, setTodos] = useState([]);
-	const { user } = UserAuth();
+	const { user, logout } = UserAuth();
 
 	const getTodos = async () => {
 		console.log('this is user from getTodos - ', user);
@@ -150,13 +151,22 @@ function TodoList() {
 			console.log('there is an err in handleDeleteTodo: ', err.message);
 		}
 	};
-
+	const logoutForm = async () => {
+		logout()
+			.then((response) => {
+				navigate('/');
+			})
+			.catch((err) => {
+				alert(err.message);
+			});
+	};
 
 	return (
-		<div className="bodyStyle">
+		<div className='bodyStyle'>
 			<h1>Today's To do List</h1>
-			<CurrentDate className="CurrentDate" />
-			<div> </div>
+
+			<button onClick={logoutForm}>logout</button>
+			<CurrentDate className='CurrentDate' />
 
 			<TodoForm onSubmit={addTodo} />
 			<Grid style={{ marginTop: '20px' }} container spacing={1}>
@@ -174,7 +184,6 @@ function TodoList() {
 						</Grid>
 					))}
 			</Grid>
-
 		</div>
 	);
 }

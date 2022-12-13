@@ -1,7 +1,7 @@
-import Login from './loginpage/login';
+import Login from './loginPage/login';
 import CalendarPage from './Calendarpage/CalendarPage';
 import { Route, Routes } from 'react-router-dom';
-import TodoList from './todolist/TodoList';
+import TodoList from './todoList/TodoList';
 import './App.css';
 import PrivateRoutes from './utils/PrivateRoute';
 
