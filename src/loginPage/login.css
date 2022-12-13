@@ -19,17 +19,18 @@ html,
 
 .loginForm {
 	box-sizing: border-box;
-	width: 20%;
-	height: 400px;
+	min-width: 20%;
+	min-height: 300px;
 	border: solid rgb(51, 51, 85) 3px;
 	padding-left: 20px;
 	padding-right: 20px;
 	position: absolute;
 	top: 50%;
-	left: 50%;
+	
 	transform: translate(-50%, -50%);
 }
 .bottomText {
+	margin-top: 20px;
 	font-size: 15px;
 	font-weight: bold;
 }
@@ -72,7 +73,11 @@ html,
 
 
 .signup {
-
+	border: 0.5px solid black;
+	background:lightblue;
+	border-radius: 5px;
+	margin-left: 15px;
+	padding:0.5px;
 	cursor: pointer;
 }
 
@@ -86,5 +91,31 @@ html,
 	padding:30px;
 	margin:auto;
 	color:darkblue;
+	min-hight:200px;
+
+}
+.box1{
+	margin-left:20%;
+}
+.box2{
+	top:25%;
+	left: 40%;
+	right:30%;
+	padding: 10px;
+	position:absolute;
+	min-width: 30%;
+	min-height: 300px;
+	text-align: center;	
+	background-image: url("./sp.png");
+	background-size:contain;
+	background-repeat: no-repeat;
+	background-position: fixed center;
+	
+}
+.box2 h1{
+	font-size: 20px;
+	color:#1c1558;
+	font-style:italic;
+	font-weight: bolder;
 
 }
