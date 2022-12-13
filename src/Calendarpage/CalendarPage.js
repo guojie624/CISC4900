@@ -133,7 +133,7 @@ function CalendarPage() {
   return (
     <div className="App">
       <div className="headerStyle">
-        <h1>Calendar</h1>
+        <h1 >Calendar</h1>
       </div>
 
       <div className="container">
