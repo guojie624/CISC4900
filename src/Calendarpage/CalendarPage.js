@@ -1,42 +1,59 @@
-import format from "date-fns/format";
-import getDay from "date-fns/getDay";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import Button from "@mui/material/Button";
-import { getAuth } from "firebase/auth";
-import "./calendarStyle.css";
+import format from 'date-fns/format';
+import getDay from 'date-fns/getDay';
+import parse from 'date-fns/parse';
+import startOfWeek from 'date-fns/startOfWeek';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Button from '@mui/material/Button';
+import { getAuth } from 'firebase/auth';
+import { Popover, Typography } from '@mui/material';
+
 import {
-  collection,
-  addDoc,
-  getDocs,
-  updateDoc,
-  getDoc,
-  doc,
-  deleteDoc,
-  Timestamp,
-} from "firebase/firestore";
-import { database } from "../firebaseConfig";
-import { UserAuth } from "../context/AuthContext";
+	collection,
+	addDoc,
+	getDocs,
+	updateDoc,
+	getDoc,
+	doc,
+	deleteDoc,
+	Timestamp,
+} from 'firebase/firestore';
+import { database } from '../firebaseConfig';
+import { UserAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function CalendarPage() {
-  const [allEvents, setAllEvents] = useState([]);
-  const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
-  const { user } = UserAuth();
-  const locales = {
-    "en-US": require("date-fns/locale/en-US"),
-  };
-  const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-  });
+	const navigate = useNavigate();
+	const [allEvents, setAllEvents] = useState([]);
+	const [newEvent, setNewEvent] = useState({ title: '', start: '', end: '' });
+	const [selected, setSelected] = useState(null);
+	const [eventStart, setEventStart] = useState(null);
+
+	const { user, logout } = UserAuth();
+
+	const locales = {
+		'en-US': require('date-fns/locale/en-US'),
+	};
+	const localizer = dateFnsLocalizer({
+		format,
+		parse,
+		startOfWeek,
+		getDay,
+		locales,
+	});
+	const logoutForm = async () => {
+		logout()
+			.then((response) => {
+				navigate('/');
+			})
+			.catch((err) => {
+				alert(err.message);
+			});
+	};
+
 
   const clickRef = useRef(null);
 
@@ -130,54 +147,76 @@ function CalendarPage() {
     }, 250);
   }, []);
 
-  return (
-    <div className="App">
-      <div className="headerStyle">
-        <h1>Calendar</h1>
-      </div>
+				setAllEvents((prevState) => [...prevState, newEventInfo]);
+			}
+		} catch (err) {
+			console.log(
+				'there is something wrong when tried to add a new event: ',
+				err.message
+			);
+		}
+	};
+	const handleSelected = (event) => {
+		console.log('event in handleSelected - ', event);
+		console.log('event in handleSelected - ', event.start);
 
-      <div className="container">
-        <h2>Add New Event</h2>
-        <div>
-          <input
-            type="text"
-            placeholder="Add Title"
-            style={{ width: "34%", marginRight: "10px" }}
-            value={newEvent.title}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, title: e.target.value })
-            }
-          />
-          <DatePicker
-            placeholderText="Start Date"
-            style={{ marginRight: "10px" }}
-            showTimeSelect
-            selected={newEvent.start}
-            onChange={(start) => setNewEvent({ ...newEvent, start })}
-          />
-          <DatePicker
-            placeholderText="End Date"
-            showTimeSelect
-            selected={newEvent.end}
-            onChange={(end) => setNewEvent({ ...newEvent, end })}
-          />
-          <Button variant="contained" onClick={handleAddEvent}>
-            Add Event
-          </Button>
-        </div>
-      </div>
-      <Calendar
-	  	className="calendarStyle"
-			
-        localizer={localizer}
-        events={allEvents}
-        startAccessor="start"
-        endAccessor="end"
-        onDoubleClickEvent={onDoubleClickEvent}
-        style={{ height: 500, margin: "50px" }}
-		/>
-    </div>
-  );
+		console.log('event in handleSelected - ', typeof event.start);
+		console.log('event in handleSelected - ', Date(event.start));
+
+		setSelected(event);
+		setEventStart(event.start);
+	};
+
+	return (
+		<div className='App'>
+			<h1>Calendar</h1>
+			<button onClick={logoutForm}>logout</button>
+			<h2>Add New Event</h2>
+			<div>
+				<input
+					type='text'
+					placeholder='Add Title'
+					style={{ width: '20%', marginRight: '10px' }}
+					value={newEvent.title}
+					onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+				/>
+				<DatePicker
+					placeholderText='Start Date'
+					style={{ marginRight: '10px' }}
+					showTimeSelect
+					selected={newEvent.start}
+					onChange={(start) => setNewEvent({ ...newEvent, start })}
+				/>
+				<DatePicker
+					placeholderText='End Date'
+					showTimeSelect
+					selected={newEvent.end}
+					onChange={(end) => setNewEvent({ ...newEvent, end })}
+				/>
+				<Button variant='contained' onClick={handleAddEvent}>
+					Add Event
+				</Button>
+			</div>
+			<Calendar
+				localizer={localizer}
+				events={allEvents}
+				startAccessor='start'
+				endAccessor='end'
+				selected={selected}
+				onSelectEvent={handleSelected}
+				style={{ height: 500, margin: '50px' }}
+			/>
+			<Popover open={Boolean(selected)} anchorEl={eventStart}>
+				<Typography>
+					{`${selected?.start.toString()},
+						${selected?.end.toString()},
+						${selected?.title.toString()}`}
+					<Button>Update</Button>
+					<Button>Delete</Button>
+				</Typography>
+			</Popover>
+		</div>
+	);
 }
 
 export default CalendarPage;
