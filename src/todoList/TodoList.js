@@ -154,7 +154,7 @@ function TodoList() {
   const logoutForm = async () => {
     logout()
       .then((response) => {
-        navigate("/login");
+        navigate("/");
       })
       .catch((err) => {
         alert(err.message);
@@ -164,10 +164,16 @@ function TodoList() {
   return (
     <div className="bodyStyle">
       <h1>Today's To do List</h1>
-      <Link to="/calendar-page">My calendar</Link>
+      <button
+      className="btStyle"
+       onClick={logoutForm}>Log Out</button>
 
-      <button onClick={logoutForm}>logout</button>
-      <CurrentDate className="CurrentDate" />
+      <Link
+      className="navButton"
+      to="/calendar-page">My calendar</Link>
+
+      
+      <CurrentDate/>
 
       <TodoForm onSubmit={addTodo} />
       <Grid style={{ marginTop: "20px" }} container spacing={1}>

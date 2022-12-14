@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "@mui/material/Button";
 import { getAuth } from "firebase/auth";
+import "./calendarStyle.css";
 import { cardContentClasses, Popover, Typography } from "@mui/material";
 
 import {
@@ -53,7 +54,7 @@ function CalendarPage() {
   const logoutForm = async () => {
     logout()
       .then((response) => {
-        navigate("/login");
+        navigate("/");
       })
       .catch((err) => {
         alert(err.message);
@@ -205,21 +206,33 @@ function CalendarPage() {
 
   return (
     <div className="App">
-      <h1>Calendar</h1>
-      <button onClick={logoutForm}>logout</button>
-      <Link to="/todo-list">Today's Todo</Link>
-      <h2>Add New Event</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Add Title"
-          style={{ width: "20%", marginRight: "10px" }}
-          value={newEvent.title}
-          onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-        />
+      <div className="headerStyle">
+        <h1>Calendar</h1>
+      </div>
+
+      <button className="buttonStyle" onClick={logoutForm}>
+        Log Out
+      </button>
+      <div className="container">
+        <Link className="navButton" to="/todo-list">
+          Today's Todo
+        </Link>
+
+        <h2>Add New Event</h2>
+
+        <div>
+          <input
+            type="text"
+            style={{ marginRight: "302px" }}
+            placeholder="Add Title"
+            value={newEvent.title}
+            onChange={(e) =>
+              setNewEvent({ ...newEvent, title: e.target.value })
+            }
+          />
+        </div>
         <DatePicker
           placeholderText="Start Date"
-          style={{ marginRight: "10px" }}
           showTimeSelect
           selected={newEvent.start}
           onChange={(start) => setNewEvent({ ...newEvent, start })}
@@ -235,6 +248,7 @@ function CalendarPage() {
         </Button>
       </div>
       <Calendar
+        className="calendarStyle"
         localizer={localizer}
         events={allEvents}
         startAccessor="start"
@@ -244,11 +258,12 @@ function CalendarPage() {
         style={{ height: 500, margin: "50px" }}
       />
       <Popover
+        className="editMode"
         open={Boolean(anchorEl)}
         anchorEl={openPopOver}
         onClose={handleClose}
       >
-        <Typography>
+        <Typography className="otherPick">
           <DatePicker
             placeholderText="Start Date"
             showTimeSelect
@@ -269,8 +284,12 @@ function CalendarPage() {
               setSelected({ ...selected, title: e.target.value })
             }
           />
-          <Button onClick={handleUpdateEvent}>Update</Button>
-          <Button onClick={handleDeleteEvent}>Delete</Button>
+          <Button className="buttonStyle" onClick={handleUpdateEvent}>
+            Update
+          </Button>
+          <Button className="buttonStyle2" onClick={handleDeleteEvent}>
+            Delete
+          </Button>
         </Typography>
       </Popover>
     </div>

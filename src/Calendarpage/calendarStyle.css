@@ -1,43 +1,74 @@
-.App{
-margin:auto;
-padding:20px;
+.App {
+  margin: auto;
+  padding: 20px;
 }
-.container{
-
-    width:500px;
-    max-width: 100%;
-    padding:0 20px;
-    margin: 0 auto;
-    border: 1px solid;
-    border-radius: 15px;
-    background:rgb(109, 197, 241);
-    font-size: 20px;
-    
+.container {
+  width: 500px;
+  max-width: 100%;
+  padding: 0 20px;
+  margin: auto;
+  border: 1px solid;
+  border-radius: 15px;
+  background: rgb(109, 197, 241, 0.8);
+  font-size: 20px;
 }
 
-.headerStyle{
-    width:250px;
-    max-width: 100%;
-    text-align: center;
-    padding:0 20px;
-    margin: 0 auto;
-    border-radius: 15px;
-    background-image:url("./bgheader.png");
-    background-position: 80%;
-    font-size: 20px;
-    
-    
-    /*rgb(133, 214, 71);*/
-    
+.headerStyle {
+  width: 250px;
+  max-width: 100%;
+  text-align: center;
+  padding: 0 20px;
+  margin: 0 auto;
+  border-radius: 15px;
+  background-image: url("./bgheader.png");
+  background-position: 80%;
+  font-size: 20px;
+
+  /*rgb(133, 214, 71);*/
 }
 
-.calendarStyle{
-    background-image: url("./bgcalendar.jpg" ) ;
-    background-repeat: no-repeat;
-    background-size: cover;
-    
-    
-    
-   
+.calendarStyle {
+  background-image: url("./bgcalendar.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
+.buttonStyle {
+  background-color: rgb(215, 12, 12);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bolder;
+}
+
+.buttonStyle:hover {
+  background-color: black;
+  color: white;
+}
+.navButton {
+  color: black;
+  padding: 10px;
+  font-weight: bolder;
+}
+.navButton:hover {
+  transform: scale(1.2);
+}
+.editMode {
+  position: fixed;
+  margin-left: 35%;
+  margin-top: 10%;
+}
+.otherPick {
+  background-color: rgb(242, 178, 224);
+  width: 380px;
+  height: 380px;
+  border-radius: 15px;
+}
+.otherPick button {
+  background-color: rgb(37, 123, 184);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bolder;
+  margin-left: 10px;
 }
