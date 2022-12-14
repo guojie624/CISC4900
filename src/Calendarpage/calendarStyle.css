@@ -39,6 +39,9 @@
   padding: 10px 20px;
   border-radius: 5px;
   font-weight: bolder;
+  position: absolute;
+  top: 8px;
+  right: 16px;
 }
 
 .buttonStyle:hover {
@@ -49,6 +52,11 @@
   color: black;
   padding: 10px;
   font-weight: bolder;
+  font-size: 20px;
+  position: absolute;
+    top: 8px;
+    right: 150px;
+
 }
 .navButton:hover {
   transform: scale(1.2);
